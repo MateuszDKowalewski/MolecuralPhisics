@@ -1,16 +1,52 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+import random
+import sys
+import pygame
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+class Simulation:
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    def __init__(self):
+        self.screen = pygame.display.set_mode((900, 500))
+        self.clock = pygame.time.Clock()
+        pygame.display.set_caption("Molecular simulation")
+        self.atoms = []
+        for i in range(0, 100):
+            self.atoms.append(Atom())
+
+        clock = pygame.time.Clock()
+        while True:
+            clock.tick(60)
+            for event in pygame.event.get():
+                self.handle_quit_event(event)
+            for atom in self.atoms:
+                atom.tick()
+            self.draw()
+
+    def draw(self):
+        self.screen.fill((0, 0, 0))
+        for atom in self.atoms:
+            atom.draw(self.screen)
+        pygame.display.flip()
+
+    def handle_quit_event(self, event):
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+
+class Atom:
+
+    def __init__(self):
+        self.position = (random.randint(0, 900), random.randint(0, 500))
+        self.velocity = (0, 0)
+        self.color = (255, 0, 0)
+
+    def draw(self, screen):
+        pygame.draw.circle(screen, self.color, self.position, 2)
+
+    def tick(self):
+        self.position = (self.position[0] + 1, self.position[1] + 1)
+
+
+if __name__ == "__main__":
+    Simulation()
